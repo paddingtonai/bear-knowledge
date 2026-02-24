@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Keep structure but ignore content
+chat-logs/
+chat-summaries/
+
+# Except .gitkeep
+!.gitkeep
