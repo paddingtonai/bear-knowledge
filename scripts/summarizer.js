@@ -11,14 +11,13 @@ const path = require('path');
 const LOGS_DIR = path.join(process.env.HOME, 'bear-knowledge', 'chat-logs');
 const SUMMARIES_DIR = path.join(process.env.HOME, 'bear-knowledge', 'chat-summaries');
 
-// Get date from args or use yesterday
+// Get date from args or use today (collector saves to today's folder)
 function getTargetDate() {
   if (process.argv[2]) {
     return process.argv[2];
   }
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  return yesterday.toISOString().split('T')[0];
+  const today = new Date();
+  return today.toISOString().split('T')[0];
 }
 
 // Parse transcript
