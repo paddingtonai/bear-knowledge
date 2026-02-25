@@ -37,7 +37,7 @@ function getDateRange() {
   return {
     after: yesterday345PM.toISOString(),
     before: today3AM.toISOString(),
-    dateStr: today3AM.toISOString().split('T')[0] // YYYY-MM-DD
+    dateStr: yesterday345PM.toISOString().split('T')[0] // Label with the day the messages are FROM
   };
 }
 
