@@ -41,10 +41,10 @@ function getDateRange() {
   };
 }
 
-// Fetch messages from a channel
-async function fetchMessages(channelId, after, before) {
+// Fetch messages from a channel (returns ALL, we filter client-side)
+async function fetchMessages(channelId) {
   return new Promise((resolve, reject) => {
-    const url = `${API_BASE}/channels/${channelId}/messages?after=${encodeURIComponent(after)}&before=${encodeURIComponent(before)}&limit=500`;
+    const url = `${API_BASE}/channels/${channelId}/messages?limit=500`;
     
     const options = {
       headers: {
@@ -67,6 +67,17 @@ async function fetchMessages(channelId, after, before) {
         }
       });
     }).on('error', reject);
+  });
+}
+
+// Filter messages to date range (client-side)
+function filterByDate(messages, after, before) {
+  const afterDate = new Date(after);
+  const beforeDate = new Date(before);
+  
+  return messages.filter(msg => {
+    const msgDate = new Date(msg.createdAt);
+    return msgDate >= afterDate && msgDate < beforeDate;
   });
 }
 
@@ -105,8 +116,11 @@ async function main() {
   for (const channel of CHANNELS) {
     try {
       console.log(`Fetching #${channel}...`);
-      const response = await fetchMessages(channel, after, before);
-      const messages = response.messages || response;
+      const response = await fetchMessages(channel);
+      const allMessages = response.messages || response;
+      
+      // Filter to date range (client-side since API params don't work)
+      const messages = filterByDate(allMessages, after, before);
       
       if (messages.length === 0) {
         console.log(`  No messages in #${channel}`);
